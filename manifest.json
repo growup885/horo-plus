@@ -3,11 +3,11 @@
     "name": "Horo+",
     "version": "67.42.109",
     "icons":  {
-      "128": "logo_128.png",
-      "48": "logo_48.png",
-      "32": "logo_32.png",
-      "16": "logo_16.png",
-      "64": "logo_64.png"
+      "128": "assets/logo_128.png",
+      "48": "assets/logo_48.png",
+      "32": "assets/logo_32.png",
+      "16": "assets/logo_16.png",
+      "64": "assets/logo_64.png"
     },
     "description": "Horo+ is a browser extension that aims to make the HDP platform better by removing bloat, fixing annoying or inconsistent behaviour and adding new convenience feautures.",
     "content_scripts": [
@@ -19,7 +19,6 @@
         "all_frames": false
       }
     ],
-    
     "permissions": ["webNavigation"],
     "host_permissions": ["*://horodigital.ru/*"]
   }

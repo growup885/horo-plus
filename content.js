@@ -40,6 +40,7 @@
               }
             }
         });
+        // fixDarkMode();
         if (link == "/student") {
             const applyStyle = () => {
                 if (document.body.style.overflowX !== "hidden") {
@@ -89,7 +90,7 @@
                         document.getElementById("chat_message_input").style.removeProperty("min-height");
                         answer_field_expanded = false;
                     } else {
-                        document.getElementById("chat_message_input").style.minHeight = "400px";
+                        document.getElementById("chat_message_input").style.minHeight = "35vh";
                         answer_field_expanded = true;
                     }
                 }
@@ -128,45 +129,38 @@
 
     main(location.pathname);
     
-    
-
-    // const observer = new MutationObserver((mutations, obs) => {
-    //     const button = document.querySelector('._status_1rpl5_7._appointed_1rpl5_22');
-    //     if (button) {
-    //         button.click();
-    //         obs.disconnect();
-    //     }
-    // });
-    // observer.observe(document.body, {
-    //     childList: true,
-    //     subtree: true
-    // });
 
 
 
 
-    // const mdObserver = new MutationObserver((mutations, obs) => {
-    //     const eman = document.getElementById('chat_message_input');
-    //     if (eman) {
-    //         addRemoveMarkdown();
-    //         obs.disconnect();
-    //     }
-    // })
-    // mdObserver.observe(document.body, {
-    //     childList: true,
-    //     subtree: true
-    // })
+    function fixDarkMode() {
+      document.documentElement.style.setProperty('--darkreader-bg--white', '#101010');
+      document.documentElement.style.setProperty('--darkreader-neutral-background', '#101010');
+      document.documentElement.style.setProperty('--darkreader-background-ffffff', '#101010');
+      document.documentElement.style.setProperty('--darkreader-background-f4f4f7', '#101010');
+      // document.documentElement.style.setProperty('--digitalViolet', '#5854a4');
+      
+      const style = document.createElement('style');
+      style.textContent = `
+        ._title_zfhk8_14 {
+          color: #fdfdfd;
+        }
+      `;
+      document.head.appendChild(style);
+
+      console.log("linkinpark");
+    }
 
 
     function RemoveMarkdown() {
         const TARGET_ID = 'chat_message_input';
         const TARGET_PATH_RE = /^\/student\/topic\/[^/]+\/task\/[^/]+(?:\/|$)/;
         function stripFormatting() {
-          const el = document.getElementById(TARGET_ID);
-          if (!el) { console.warn('[strip] #' + TARGET_ID + ' not found'); return; }
+          const el = document.getElementById('chat_message_input');
+          if (!el) { console.warn('[strip] #chat_message_input not found'); return; }
           let tiny = null;
           if (window.tinymce && typeof window.tinymce.get === 'function') {
-            tiny = window.tinymce.get(TARGET_ID) || null;
+            tiny = window.tinymce.get(el.id) || null;
           }
           const sourceHtml = (tiny && typeof tiny.getContent === 'function')
             ? tiny.getContent()
@@ -174,51 +168,49 @@
           const doc = new DOMParser().parseFromString(
             '<!doctype html><body>' + sourceHtml, 'text/html'
           );
-          const isBlock = t => /^(p|div|li|h[1-6]|blockquote|pre|section|article|tr|hr|ul|ol|table|thead|tbody)$/i.test(t);
-          const isSkip  = t => /^(script|style|noscript|template)$/i.test(t);
-          let out = '';
-          const ensureNewline = () => { if (out.length && !out.endsWith('\n')) out += '\n'; };
-          const walk = (node) => {
-            if (node.nodeType === 3) {
-              const t = node.nodeValue.replace(/\u00a0/g, ' ');
-              if (t.trim() === '') {
-                if (out.length && !out.endsWith(' ') && !out.endsWith('\n')) out += ' ';
-              } else {
-                out += t;
+          const body = doc.body;
+          const UNWRAP_TAGS = new Set(['STRONG', 'B', 'EM', 'I', 'U']);
+          const DROP_PROPS = new Set([
+            'font-weight',
+            'font-style',
+            'text-decoration',
+            'text-decoration-line',
+          ]);
+          for (const tag of UNWRAP_TAGS) {
+            body.querySelectorAll(tag).forEach(node => {
+              const parent = node.parentNode;
+              while (node.firstChild) parent.insertBefore(node.firstChild, node);
+              parent.removeChild(node);
+            });
+          }
+          body.querySelectorAll('[style]').forEach(node => {
+            let changed = false;
+            for (const prop of DROP_PROPS) {
+              if (node.style.getPropertyValue(prop) !== '') {
+                node.style.removeProperty(prop);
+                changed = true;
               }
-              return;
             }
-            if (node.nodeType !== 1) return;
-            const tag = node.tagName;
-            if (isSkip(tag)) return;
-            if (tag === 'BR') { out += '\n'; return; }
-            if (isBlock(tag)) {
-              ensureNewline();
-              for (const c of node.childNodes) walk(c);
-              out += '\n';
-            } else {
-              for (const c of node.childNodes) walk(c);
+            if (node.hasAttribute('data-mce-style')) {
+              let mce = node.getAttribute('data-mce-style');
+              for (const prop of DROP_PROPS) {
+                mce = mce.replace(new RegExp('(?:^|;)\\s*' + prop + '\\s*:[^;]*;?', 'gi'), '');
+              }
+              mce = mce.replace(/^;+|;+$/g, '').trim();
+              if (mce) node.setAttribute('data-mce-style', mce);
+              else     node.removeAttribute('data-mce-style');
             }
-          };
-          for (const c of doc.body.childNodes) walk(c);
-          const plain = out
-            .replace(/\r\n?/g, '\n')
-            .replace(/[ \t]+\n/g, '\n')
-            .replace(/^\n+|\n+$/g, '');
-          const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-          const newHtml = plain.length === 0
-            ? ''
-            : plain.split('\n').map(line => {
-                if (line.trim() === '') return '<p><br></p>';
-                let safe = esc(line);
-                safe = safe.replace(/^ /, '&nbsp;').replace(/ $/, '&nbsp;');
-                return '<p>' + safe + '</p>';
-              }).join('');
+            if (changed && node.getAttribute('style') !== null) {
+              const remaining = node.getAttribute('style').trim();
+              if (remaining === '' || remaining === ';') node.removeAttribute('style');
+            }
+          });
+          const newHtml = body.innerHTML;
           if (tiny && typeof tiny.setContent === 'function') {
             tiny.setContent(newHtml);
           } else {
             el.innerHTML = newHtml;
-            el.dispatchEvent(new InputEvent('input', { bubbles: true, inputType: 'insertText', data: plain }));
+            el.dispatchEvent(new InputEvent('input', { bubbles: true, inputType: 'insertText', data: null }));
             el.dispatchEvent(new Event('change', { bubbles: true }));
           }
           return newHtml;
@@ -242,9 +234,11 @@
         document.addEventListener('keydown', onKeyDown, true);
     }
 
+
+
     if ("navigation" in window) {
-        window.navigation.addEventListener("navigatesuccess", () => {
+      window.navigation.addEventListener("navigatesuccess", () => {
         main(location.pathname);
-    });
+      });
     }
 })();
