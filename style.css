@@ -1,0 +1,37 @@
+/* Hidden state: add this class to <html> to hide the targets */
+
+
+/* html.hide-targets [data-testid="disciplinesCard"],
+html.hide-targets [data-testid="studentProgressCard"], */
+
+
+html.hide-targets [data-testid="achievementsCard"],
+html.hide-targets [data-testid="goalsCard"],
+html.hide-targets [data-testid="activitiesCard"],
+html.hide-targets [data-testid="helpCard"],
+html.hide-targets ._emergencyContactIcon_1bmlc_5,
+html.hide-targets [data-testid="documentsCard"] {
+  display: none !important;
+}
+
+/* body {
+  background-image: url("chrome-extension://__MSG_@@extension_id__/assets/bg.jpg") !important;
+  background-size: cover !important;
+} */
+
+/* html.hide-targets {
+  overflow: hidden !important;
+} */
+
+/* #toggle-btn {
+  /* position: fixed; */
+  /* bottom: 20px;
+  right: 20px; */
+  /* z-index: 2147483647;
+  padding: 8px 14px;
+  background: #1a73e8;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font: 14px sans-serif; */

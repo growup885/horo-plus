@@ -1,6 +1,8 @@
 (() => {
     'use strict';
 
+    const MacacOS = navigator.userAgentData.platform == "macOS";
+
     const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
     function matchesTaskPath(link) {
@@ -9,6 +11,15 @@
 
     function matchesTopicPath(link) {
         return /^\/student\/topic\/[^/?#]+\/?$/i.test(link);
+    }
+    
+
+    function isCtrl(key) {
+      if (MacacOS) {
+        return key.metaKey;
+      } else {
+        return key.ctrlKey
+      }
     }
 
     function removeElement(getElement) {
@@ -32,12 +43,19 @@
     }
 
     function main(link) {
+        // sacrificeCards();
+        document.documentElement.classList.toggle("hide-targets", true);
+        // document.documentElement.style.setProperty("overflow", "hidden", "important");   // breaks everything don't use
+        // hideElement(() => document.getElementsByClassName("_fullRow_1542x_46")[0]);
         document.addEventListener("keydown", (event) => {
             if (event.key == "h") {
               const home_btn = document.getElementsByClassName("_button_1a0il_1 _outline_1a0il_48 _s_1a0il_17")[0];
               if (home_btn && home_btn.textContent != "Расписание") {
                 home_btn.click();
-              }
+              } 
+            }
+            else if (event.key == "=") {
+              document.documentElement.classList.toggle("hide-targets");
             }
         });
         // fixDarkMode();
@@ -52,6 +70,10 @@
             observer.observe(document.body, { attributes: true, attributeFilter: ["style", "class"] });
             hideElement(() => document.querySelector('[data-testid="aiAssistantButton"]'));
             removeElement(() => document.getElementById("uw-main-button"));
+            // hideElement(() => document.getElementsByClassName("_p1_fmg0z_5")[2]);
+            // hideElement(() => document.querySelector('[data-testid="studentProgressCard"]').children[1]);
+            // hideElement(() => document.querySelector('[data-testid="disciplinesCard"]').children[1]);
+            
             document.addEventListener("keydown", (event) => {
                 if (event.key == "Enter") {
                     document.querySelector('[data-testid="tasksStatusLink"]').click();
@@ -85,7 +107,7 @@
             removeElement(() => document.querySelector('[data-testid="goToChatInfoPanel"]'));
             let answer_field_expanded = false;
             document.addEventListener("keydown", (event) => {
-                if (event.ctrlKey && event.key === '.') {
+                if (isCtrl(event) && event.key === '.') {
                     if (answer_field_expanded) {
                         document.getElementById("chat_message_input").style.removeProperty("min-height");
                         answer_field_expanded = false;
@@ -99,6 +121,7 @@
             console.log("LOHMANOID");
             removeElement(() => document.querySelector("._content_eauu0_76"));
             removeElement(() => document.querySelector("._root_1r328_1"));
+            // document.querySelector('[data-testid="taskDescriptionTabs"]');
 
             document.addEventListener("keydown", (event) => {
                 if (event.key == "g") {
@@ -131,7 +154,32 @@
     
 
 
+    function sacrificeCards() {
+      const root = document.documentElement;
 
+      // Create the button
+      const btn = document.createElement("button");
+      btn.id = "toggle-btn";
+      btn.className = "_button_1a0il_1 _primary_1a0il_157 _s_1a0il_17 _sendButton_6bbgf_76 _messageInputEditorSubmitButtonClassName_1si7h_26";
+      document.body.appendChild(btn);
+      
+      function updateLabel() {
+        btn.textContent = root.classList.contains("hide-targets")
+          ? "Show additonal elements"
+          : "Hide additional elements";
+      }
+      
+      // Restore saved state (optional)
+      const hidden = localStorage.getItem("hideTargets") === "1";
+      root.classList.toggle("hide-targets", hidden);
+      updateLabel();
+      
+      btn.addEventListener("click", () => {
+        const nowHidden = root.classList.toggle("hide-targets");
+        localStorage.setItem("hideTargets", nowHidden ? "1" : "0");
+        updateLabel();
+      });
+    }
 
     function fixDarkMode() {
       document.documentElement.style.setProperty('--darkreader-bg--white', '#101010');
@@ -219,7 +267,7 @@
         function onKeyDown(ev) {
           if (ev.repeat) return;
           if (ev.code !== 'KeyX') return;
-          if (!ev.ctrlKey || !ev.shiftKey || ev.altKey || ev.metaKey) return;
+          if (!isCtrl(ev) || !ev.shiftKey || ev.altKey || ev.metaKey) return;
           if (!TARGET_PATH_RE.test(location.pathname)) return;
           const el = document.getElementById(TARGET_ID);
           if (!el) return;
