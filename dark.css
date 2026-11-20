@@ -50,62 +50,31 @@ html:has(style.darkreader) img[data-formula-latex] {
 }
 
 /* ---------------------------------------------------------------------------
-   Inline SVG icons (subject page stats: "Интегральная оценка", "Целевой
-   уровень", "Диагностические работы", ...).
-   Dark Reader classifies their large light pastel shapes as backgrounds and
-   darkens them to near-black while small shapes stay bright, so the icon falls
-   apart. Dark Reader resolves each fill through
-   var(--darkreader-<background|text>-<hex>, <its fallback>), so we define those
-   variables ourselves. The values are the original colours put through the same
-   treatment as the PNG icons in section 4 (violet hue blended at 42%, saturation
-   boosted x1.7 so pastels stay coloured, then a 25% dim towards the page
-   background), so SVG and PNG icons share one palette:
-   violet base with muted warm accents. Scoped to sized icon SVGs (the radar
-   chart on the goals page has no width/height and is untouched).
+   Inline SVG icons (subject page: "Интегральная оценка", "Целевой уровень",
+   "Диагностические работы", ...). Dark Reader classifies their large light
+   pastel shapes as backgrounds and darkens them to near-black, while the
+   small shapes stay bright, so the icon falls apart. Dark Reader resolves each
+   fill through var(--darkreader-background-<hex>, <dark fallback>), so we set
+   those variables back to the original hex, but only inside sized icon SVGs
+   (the radar chart on the goals page has no width/height and is untouched).
    ------------------------------------------------------------------------- */
 html:has(style.darkreader) svg[width][height][viewBox] {
-  --darkreader-background-27205d: #241e52;
-  --darkreader-background-b03900: #7a2a55;
-  --darkreader-background-b2acdf: #8b86b5;
-  --darkreader-background-bec8f7: #a1a3bd;
-  --darkreader-background-c4bfec: #9c98ba;
-  --darkreader-background-cfcbf2: #a5a3be;
-  --darkreader-background-d3dcfb: #afb1c1;
-  --darkreader-background-d6d4f1: #a9a7bf;
-  --darkreader-background-dbd8f0: #aca9bf;
-  --darkreader-background-de9730: #aa7160;
-  --darkreader-background-e5e4f4: #b3b2c2;
-  --darkreader-background-e9efff: #bdbec5;
-  --darkreader-background-edb25c: #b18b7a;
-  --darkreader-background-f6ca56: #b39e7f;
-  --darkreader-background-fdab00: #a9875e;
-  --darkreader-background-ff5905: #a44d58;
-  --darkreader-text-27205d: #241e52;
-  --darkreader-text-9996ae: #777392;
-  --darkreader-text-aab8e8: #8e92b8;
-  --darkreader-text-b2acdf: #8b86b5;
-  --darkreader-text-bec8f7: #a1a3bd;
-  --darkreader-text-c4bfec: #9c98ba;
-  --darkreader-text-cf9c51: #9e7375;
-  --darkreader-text-d3dcfb: #afb1c1;
-  --darkreader-text-d6d2f7: #acaac0;
-  --darkreader-text-d8d5f5: #acaac0;
-  --darkreader-text-d9d8da: #ababad;
-  --darkreader-text-dbd8f0: #aca9bf;
-  --darkreader-text-e2dff5: #b2b0c1;
-  --darkreader-text-e5e4f4: #b3b2c2;
-  --darkreader-text-e8e6f8: #b7b6c3;
-  --darkreader-text-e9efff: #bdbec5;
-  --darkreader-text-eceafc: #bbbbc4;
-  --darkreader-text-ef6c49: #a75578;
-  --darkreader-text-f06b49: #a75578;
-  --darkreader-text-f2f0fc: #bfbec5;
-  --darkreader-text-f4906e: #af7287;
-  --darkreader-text-f6ca56: #b39e7f;
-  --darkreader-text-f9d171: #b6a48b;
-  --darkreader-text-fab658: #b3917f;
-  --darkreader-text-fce3a0: #bdb2a0;
-  --darkreader-text-ffffff: #c8c8c8;
+  --darkreader-background-27205d: #27205d;
+  --darkreader-background-b03900: #b03900;
+  --darkreader-background-b2acdf: #b2acdf;
+  --darkreader-background-bec8f7: #bec8f7;
+  --darkreader-background-c4bfec: #c4bfec;
+  --darkreader-background-cfcbf2: #cfcbf2;
+  --darkreader-background-d3dcfb: #d3dcfb;
+  --darkreader-background-d6d4f1: #d6d4f1;
+  --darkreader-background-dbd8f0: #dbd8f0;
+  --darkreader-background-de9730: #de9730;
+  --darkreader-background-e5e4f4: #e5e4f4;
+  --darkreader-background-e9efff: #e9efff;
+  --darkreader-background-edb25c: #edb25c;
+  --darkreader-background-f6ca56: #f6ca56;
+  --darkreader-background-fdab00: #fdab00;
+  --darkreader-background-ff5905: #ff5905;
 }
 
 /* ---------------------------------------------------------------------------
@@ -119,122 +88,43 @@ html:has(style.darkreader) [class*="_tasks_"] [class*="_status_"] > img[class*="
 }
 
 /* ---------------------------------------------------------------------------
-   4. Recolour the bright illustrations into the violet palette.
-   The main menu card icons are PNG background images, and the illustration on
-   the "Интегральная оценка" page is built from background-image blocks, so a
-   plain `filter` would also recolour the text on top of them. Two translucent
-   layers do the job instead:
-     ::before  (z-index:-1)  a dim layer in the page-background colour, between
-               the background image and the content. isolation:isolate +
-               z-index:-1 puts it above the element's own background but below
-               its text and children.
-     ::after   a violet layer with mix-blend-mode:hue, above the content. The
-               `hue` blend changes only the hue of coloured pixels and keeps
-               their saturation and lightness, so greys (page background, text,
-               callout boxes, white parts of the illustration) are untouched,
-               and there is no visible rectangle where the image is transparent.
-   At 42% the hue is pulled towards violet but yellows/oranges survive as muted
-   rose/mauve accents. Tune the opacity (and keep HUE_OPACITY in the SVG icon
-   variables above in sync) to push the palette more or less violet.
+   4. "Интегральная оценка" page: cap + books illustration.
+   The illustration is a set of bright white/blue/orange background-image
+   blocks. Its colours are left as designed (no dimming or recolouring), and
+   instead it is made to sit on the dark page on purpose:
+     - a soft indigo glow behind it, with no hard edges (the legend callouts
+       overhang the illustration, so a boxed panel would collide with them);
+     - a drop shadow under the books so they read as objects, not a cut-out;
+     - dark labels printed on the white books (see below).
    ------------------------------------------------------------------------- */
-html:has(style.darkreader) :is(
-  [data-testid="disciplinesCard"],
-  [data-testid="studentProgressCard"],
-  [data-testid="achievementsCard"],
-  [data-testid="goalsCard"],
-  [data-testid="activitiesCard"],
-  [data-testid="documentsCard"]
-) {
-  position: relative;
-  isolation: isolate;
+
+/* The glow goes on the wrapper that holds the illustration and the legend
+   callouts. It is found structurally (the hashed class name is not stable);
+   :has() cannot be nested, hence the `> * >` form. */
+html:has(style.darkreader) :has(> * > [class*="_diagnosticWorksResult_"]) {
+  background-image: radial-gradient(
+    ellipse 46% 78% at 50% 52%,
+    rgba(128, 114, 255, 0.55) 0%,
+    rgba(104, 92, 230, 0.28) 45%,
+    rgba(96, 86, 200, 0) 80%
+  );
 }
 
-html:has(style.darkreader) :is(
-  [data-testid="disciplinesCard"],
-  [data-testid="studentProgressCard"],
-  [data-testid="achievementsCard"],
-  [data-testid="goalsCard"],
-  [data-testid="activitiesCard"],
-  [data-testid="documentsCard"]
-)::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  border-radius: inherit;
-  background: rgba(36, 37, 37, 0.25);
-}
-
-html:has(style.darkreader) :is(
-  [data-testid="disciplinesCard"],
-  [data-testid="studentProgressCard"],
-  [data-testid="achievementsCard"],
-  [data-testid="goalsCard"],
-  [data-testid="activitiesCard"],
-  [data-testid="documentsCard"]
-)::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  border-radius: inherit;
-  background: #7b6cf5;
-  mix-blend-mode: hue;
-  opacity: 0.42;
-}
-
-/* "Интегральная оценка" page: cap + books illustration. The blocks that carry
-   a background image are positioned already. [class*="_grade_"] is the small
-   "40%" badge in the stats row, which also has a _totalResult_ class but no
-   image. */
+/* [class*="_grade_"] is the small "40%" badge in the stats row, which also has
+   a _totalResult_ class but no illustration. */
 html:has(style.darkreader) :is(
   [class*="_totalResult_"],
   [class*="_diagnosticWorksResult_"],
   [class*="_averageAchievedLevelResult_"],
   [class*="_levelUp_"]
 ):not([class*="_grade_"]) {
-  isolation: isolate;
+  filter: drop-shadow(0 14px 14px rgba(8, 6, 30, 0.55));
 }
 
-html:has(style.darkreader) :is(
-  [class*="_totalResult_"],
-  [class*="_diagnosticWorksResult_"],
-  [class*="_averageAchievedLevelResult_"],
-  [class*="_levelUp_"]
-):not([class*="_grade_"])::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  border-radius: inherit;
-  background: rgba(36, 37, 37, 0.3);
-}
-
-/* The hue layer for the illustration sits on the blocks' common parent
-   (found structurally with :has, the hashed class name is not stable). It must
-   not live inside the blocks: they are isolated groups, and a blend inside an
-   isolated group would see a transparent backdrop and paint a violet box. */
-html:has(style.darkreader) :has(> [class*="_diagnosticWorksResult_"]) {
-  position: relative;
-}
-
-html:has(style.darkreader) :has(> [class*="_diagnosticWorksResult_"])::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 5;
-  pointer-events: none;
-  background: #7b6cf5;
-  mix-blend-mode: hue;
-  opacity: 0.5;
-}
-
-/* Labels printed on the book illustration ("ИО 40%", "40%", "пока
-   недоступно"). Dark Reader forces their colour through an !important inline
-   rule, but it leaves -webkit-text-fill-color alone, and that wins over
-   `color`. Dark text for the now light-grey books. */
+/* Labels printed on the white books ("ИО 40%", "40%", "пока недоступно").
+   Dark Reader turns them light (salmon/grey) on a white book, which is nearly
+   unreadable. It forces their colour through an !important inline rule, but it
+   leaves -webkit-text-fill-color alone, and that wins over `color`. */
 html:has(style.darkreader) :is(
   [class*="_totalResult_"]:not([class*="_grade_"]),
   [class*="_averageAchievedLevelResult_"]
