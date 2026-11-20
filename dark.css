@@ -50,31 +50,59 @@ html:has(style.darkreader) img[data-formula-latex] {
 }
 
 /* ---------------------------------------------------------------------------
-   Inline SVG icons (subject page: "Интегральная оценка", "Целевой уровень",
-   "Диагностические работы", ...). Dark Reader classifies their large light
-   pastel shapes as backgrounds and darkens them to near-black, while the
-   small shapes stay bright, so the icon falls apart. Dark Reader resolves each
-   fill through var(--darkreader-background-<hex>, <dark fallback>), so we set
-   those variables back to the original hex, but only inside sized icon SVGs
+   Inline SVG icons (subject page stats: "Интегральная оценка", "Целевой
+   уровень", "Диагностические работы", ...).
+   Dark Reader classifies their large light pastel shapes as backgrounds and
+   darkens them to near-black while small shapes stay bright, so the icon falls
+   apart. Dark Reader resolves each fill through
+   var(--darkreader-<background|text>-<hex>, <its fallback>), so we define those
+   variables ourselves: the original icon colours, mixed 24% towards the page
+   background so they are muted rather than glaring. Scoped to sized icon SVGs
    (the radar chart on the goals page has no width/height and is untouched).
    ------------------------------------------------------------------------- */
 html:has(style.darkreader) svg[width][height][viewBox] {
-  --darkreader-background-27205d: #27205d;
-  --darkreader-background-b03900: #b03900;
-  --darkreader-background-b2acdf: #b2acdf;
-  --darkreader-background-bec8f7: #bec8f7;
-  --darkreader-background-c4bfec: #c4bfec;
-  --darkreader-background-cfcbf2: #cfcbf2;
-  --darkreader-background-d3dcfb: #d3dcfb;
-  --darkreader-background-d6d4f1: #d6d4f1;
-  --darkreader-background-dbd8f0: #dbd8f0;
-  --darkreader-background-de9730: #de9730;
-  --darkreader-background-e5e4f4: #e5e4f4;
-  --darkreader-background-e9efff: #e9efff;
-  --darkreader-background-edb25c: #edb25c;
-  --darkreader-background-f6ca56: #f6ca56;
-  --darkreader-background-fdab00: #fdab00;
-  --darkreader-background-ff5905: #ff5905;
+  --darkreader-background-27205d: #262150;
+  --darkreader-background-b03900: #8e3409;
+  --darkreader-background-b2acdf: #908cb2;
+  --darkreader-background-bec8f7: #99a1c5;
+  --darkreader-background-c4bfec: #9e9abc;
+  --darkreader-background-cfcbf2: #a6a3c1;
+  --darkreader-background-d3dcfb: #a9b0c8;
+  --darkreader-background-d6d4f1: #abaac0;
+  --darkreader-background-dbd8f0: #afadbf;
+  --darkreader-background-de9730: #b17c2d;
+  --darkreader-background-e5e4f4: #b7b6c2;
+  --darkreader-background-e9efff: #babfcb;
+  --darkreader-background-edb25c: #bd904f;
+  --darkreader-background-f6ca56: #c4a24a;
+  --darkreader-background-fdab00: #c98b09;
+  --darkreader-background-ff5905: #ca4d0d;
+  --darkreader-text-27205d: #262150;
+  --darkreader-text-9996ae: #7d7b8d;
+  --darkreader-text-aab8e8: #8a95b9;
+  --darkreader-text-b2acdf: #908cb2;
+  --darkreader-text-bec8f7: #99a1c5;
+  --darkreader-text-c4bfec: #9e9abc;
+  --darkreader-text-cf9c51: #a67f46;
+  --darkreader-text-d3dcfb: #a9b0c8;
+  --darkreader-text-d6d2f7: #aba8c5;
+  --darkreader-text-d8d5f5: #adabc3;
+  --darkreader-text-d9d8da: #aeadaf;
+  --darkreader-text-dbd8f0: #afadbf;
+  --darkreader-text-e2dff5: #b4b2c3;
+  --darkreader-text-e5e4f4: #b7b6c2;
+  --darkreader-text-e8e6f8: #b9b8c5;
+  --darkreader-text-e9efff: #babfcb;
+  --darkreader-text-eceafc: #bcbbc8;
+  --darkreader-text-ef6c49: #be5b40;
+  --darkreader-text-f06b49: #bf5a40;
+  --darkreader-text-f2f0fc: #c1bfc8;
+  --darkreader-text-f4906e: #c2765c;
+  --darkreader-text-f6ca56: #c4a24a;
+  --darkreader-text-f9d171: #c6a85f;
+  --darkreader-text-fab658: #c7934c;
+  --darkreader-text-fce3a0: #c8b582;
+  --darkreader-text-ffffff: #cacbcb;
 }
 
 /* ---------------------------------------------------------------------------
@@ -85,4 +113,88 @@ html:has(style.darkreader) svg[width][height][viewBox] {
    ------------------------------------------------------------------------- */
 html:has(style.darkreader) [class*="_tasks_"] [class*="_status_"] > img[class*="_icon_"] {
   filter: invert(0.88) hue-rotate(180deg) saturate(1.1) brightness(1.35);
+}
+
+/* ---------------------------------------------------------------------------
+   4. Dim the bright illustrations.
+   The main menu card icons are PNG background images, and the illustration on
+   the "Интегральная оценка" page is built from background-image blocks, so a
+   `filter` would also dim the text on top of them. Instead, put a translucent
+   layer in the page-background colour between the background image and the
+   content: the stacking context (isolation) plus z-index:-1 puts the layer
+   above the element's own background but below its text and children.
+   The layer matches the page background, so it is invisible where the image is
+   transparent. Raise/lower the alpha (0.4) to dim more/less.
+   ------------------------------------------------------------------------- */
+html:has(style.darkreader) :is(
+  [data-testid="disciplinesCard"],
+  [data-testid="studentProgressCard"],
+  [data-testid="achievementsCard"],
+  [data-testid="goalsCard"],
+  [data-testid="activitiesCard"],
+  [data-testid="documentsCard"]
+) {
+  position: relative;
+  isolation: isolate;
+}
+
+html:has(style.darkreader) :is(
+  [data-testid="disciplinesCard"],
+  [data-testid="studentProgressCard"],
+  [data-testid="achievementsCard"],
+  [data-testid="goalsCard"],
+  [data-testid="activitiesCard"],
+  [data-testid="documentsCard"]
+)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  background: rgba(36, 37, 37, 0.4);
+}
+
+/* "Интегральная оценка" page: cap + books illustration. The blocks that carry
+   a background image are positioned already. [class*="_grade_"] is the small
+   "40%" badge in the stats row, which also has a _totalResult_ class but no
+   image. */
+html:has(style.darkreader) :is(
+  [class*="_totalResult_"],
+  [class*="_diagnosticWorksResult_"],
+  [class*="_averageAchievedLevelResult_"],
+  [class*="_levelUp_"]
+):not([class*="_grade_"]) {
+  isolation: isolate;
+}
+
+html:has(style.darkreader) :is(
+  [class*="_totalResult_"],
+  [class*="_diagnosticWorksResult_"],
+  [class*="_averageAchievedLevelResult_"],
+  [class*="_levelUp_"]
+):not([class*="_grade_"])::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  background: rgba(36, 37, 37, 0.38);
+}
+
+/* Labels printed on the book illustration ("ИО 40%", "40%", "пока
+   недоступно"). Dark Reader forces their colour through an !important inline
+   rule, but it leaves -webkit-text-fill-color alone, and that wins over
+   `color`. Dark text for the now light-grey books. */
+html:has(style.darkreader) :is(
+  [class*="_totalResult_"]:not([class*="_grade_"]),
+  [class*="_averageAchievedLevelResult_"]
+) > p {
+  -webkit-text-fill-color: #a8381c;
+}
+
+html:has(style.darkreader) [class*="_emptyResult_"],
+html:has(style.darkreader) [class*="_emptyResult_"] * {
+  -webkit-text-fill-color: #3d3d4d;
 }
