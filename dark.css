@@ -56,53 +56,56 @@ html:has(style.darkreader) img[data-formula-latex] {
    darkens them to near-black while small shapes stay bright, so the icon falls
    apart. Dark Reader resolves each fill through
    var(--darkreader-<background|text>-<hex>, <its fallback>), so we define those
-   variables ourselves: the original icon colours, mixed 24% towards the page
-   background so they are muted rather than glaring. Scoped to sized icon SVGs
-   (the radar chart on the goals page has no width/height and is untouched).
+   variables ourselves. The values are the original colours put through the same
+   treatment as the PNG icons in section 4 (violet hue blended at 42%, saturation
+   boosted x1.7 so pastels stay coloured, then a 25% dim towards the page
+   background), so SVG and PNG icons share one palette:
+   violet base with muted warm accents. Scoped to sized icon SVGs (the radar
+   chart on the goals page has no width/height and is untouched).
    ------------------------------------------------------------------------- */
 html:has(style.darkreader) svg[width][height][viewBox] {
-  --darkreader-background-27205d: #262150;
-  --darkreader-background-b03900: #8e3409;
-  --darkreader-background-b2acdf: #908cb2;
-  --darkreader-background-bec8f7: #99a1c5;
-  --darkreader-background-c4bfec: #9e9abc;
-  --darkreader-background-cfcbf2: #a6a3c1;
-  --darkreader-background-d3dcfb: #a9b0c8;
-  --darkreader-background-d6d4f1: #abaac0;
-  --darkreader-background-dbd8f0: #afadbf;
-  --darkreader-background-de9730: #b17c2d;
-  --darkreader-background-e5e4f4: #b7b6c2;
-  --darkreader-background-e9efff: #babfcb;
-  --darkreader-background-edb25c: #bd904f;
-  --darkreader-background-f6ca56: #c4a24a;
-  --darkreader-background-fdab00: #c98b09;
-  --darkreader-background-ff5905: #ca4d0d;
-  --darkreader-text-27205d: #262150;
-  --darkreader-text-9996ae: #7d7b8d;
-  --darkreader-text-aab8e8: #8a95b9;
-  --darkreader-text-b2acdf: #908cb2;
-  --darkreader-text-bec8f7: #99a1c5;
-  --darkreader-text-c4bfec: #9e9abc;
-  --darkreader-text-cf9c51: #a67f46;
-  --darkreader-text-d3dcfb: #a9b0c8;
-  --darkreader-text-d6d2f7: #aba8c5;
-  --darkreader-text-d8d5f5: #adabc3;
-  --darkreader-text-d9d8da: #aeadaf;
-  --darkreader-text-dbd8f0: #afadbf;
-  --darkreader-text-e2dff5: #b4b2c3;
-  --darkreader-text-e5e4f4: #b7b6c2;
-  --darkreader-text-e8e6f8: #b9b8c5;
-  --darkreader-text-e9efff: #babfcb;
-  --darkreader-text-eceafc: #bcbbc8;
-  --darkreader-text-ef6c49: #be5b40;
-  --darkreader-text-f06b49: #bf5a40;
-  --darkreader-text-f2f0fc: #c1bfc8;
-  --darkreader-text-f4906e: #c2765c;
-  --darkreader-text-f6ca56: #c4a24a;
-  --darkreader-text-f9d171: #c6a85f;
-  --darkreader-text-fab658: #c7934c;
-  --darkreader-text-fce3a0: #c8b582;
-  --darkreader-text-ffffff: #cacbcb;
+  --darkreader-background-27205d: #241e52;
+  --darkreader-background-b03900: #7a2a55;
+  --darkreader-background-b2acdf: #8b86b5;
+  --darkreader-background-bec8f7: #a1a3bd;
+  --darkreader-background-c4bfec: #9c98ba;
+  --darkreader-background-cfcbf2: #a5a3be;
+  --darkreader-background-d3dcfb: #afb1c1;
+  --darkreader-background-d6d4f1: #a9a7bf;
+  --darkreader-background-dbd8f0: #aca9bf;
+  --darkreader-background-de9730: #aa7160;
+  --darkreader-background-e5e4f4: #b3b2c2;
+  --darkreader-background-e9efff: #bdbec5;
+  --darkreader-background-edb25c: #b18b7a;
+  --darkreader-background-f6ca56: #b39e7f;
+  --darkreader-background-fdab00: #a9875e;
+  --darkreader-background-ff5905: #a44d58;
+  --darkreader-text-27205d: #241e52;
+  --darkreader-text-9996ae: #777392;
+  --darkreader-text-aab8e8: #8e92b8;
+  --darkreader-text-b2acdf: #8b86b5;
+  --darkreader-text-bec8f7: #a1a3bd;
+  --darkreader-text-c4bfec: #9c98ba;
+  --darkreader-text-cf9c51: #9e7375;
+  --darkreader-text-d3dcfb: #afb1c1;
+  --darkreader-text-d6d2f7: #acaac0;
+  --darkreader-text-d8d5f5: #acaac0;
+  --darkreader-text-d9d8da: #ababad;
+  --darkreader-text-dbd8f0: #aca9bf;
+  --darkreader-text-e2dff5: #b2b0c1;
+  --darkreader-text-e5e4f4: #b3b2c2;
+  --darkreader-text-e8e6f8: #b7b6c3;
+  --darkreader-text-e9efff: #bdbec5;
+  --darkreader-text-eceafc: #bbbbc4;
+  --darkreader-text-ef6c49: #a75578;
+  --darkreader-text-f06b49: #a75578;
+  --darkreader-text-f2f0fc: #bfbec5;
+  --darkreader-text-f4906e: #af7287;
+  --darkreader-text-f6ca56: #b39e7f;
+  --darkreader-text-f9d171: #b6a48b;
+  --darkreader-text-fab658: #b3917f;
+  --darkreader-text-fce3a0: #bdb2a0;
+  --darkreader-text-ffffff: #c8c8c8;
 }
 
 /* ---------------------------------------------------------------------------
@@ -116,15 +119,23 @@ html:has(style.darkreader) [class*="_tasks_"] [class*="_status_"] > img[class*="
 }
 
 /* ---------------------------------------------------------------------------
-   4. Dim the bright illustrations.
+   4. Recolour the bright illustrations into the violet palette.
    The main menu card icons are PNG background images, and the illustration on
    the "Интегральная оценка" page is built from background-image blocks, so a
-   `filter` would also dim the text on top of them. Instead, put a translucent
-   layer in the page-background colour between the background image and the
-   content: the stacking context (isolation) plus z-index:-1 puts the layer
-   above the element's own background but below its text and children.
-   The layer matches the page background, so it is invisible where the image is
-   transparent. Raise/lower the alpha (0.4) to dim more/less.
+   plain `filter` would also recolour the text on top of them. Two translucent
+   layers do the job instead:
+     ::before  (z-index:-1)  a dim layer in the page-background colour, between
+               the background image and the content. isolation:isolate +
+               z-index:-1 puts it above the element's own background but below
+               its text and children.
+     ::after   a violet layer with mix-blend-mode:hue, above the content. The
+               `hue` blend changes only the hue of coloured pixels and keeps
+               their saturation and lightness, so greys (page background, text,
+               callout boxes, white parts of the illustration) are untouched,
+               and there is no visible rectangle where the image is transparent.
+   At 42% the hue is pulled towards violet but yellows/oranges survive as muted
+   rose/mauve accents. Tune the opacity (and keep HUE_OPACITY in the SVG icon
+   variables above in sync) to push the palette more or less violet.
    ------------------------------------------------------------------------- */
 html:has(style.darkreader) :is(
   [data-testid="disciplinesCard"],
@@ -152,7 +163,25 @@ html:has(style.darkreader) :is(
   z-index: -1;
   pointer-events: none;
   border-radius: inherit;
-  background: rgba(36, 37, 37, 0.4);
+  background: rgba(36, 37, 37, 0.25);
+}
+
+html:has(style.darkreader) :is(
+  [data-testid="disciplinesCard"],
+  [data-testid="studentProgressCard"],
+  [data-testid="achievementsCard"],
+  [data-testid="goalsCard"],
+  [data-testid="activitiesCard"],
+  [data-testid="documentsCard"]
+)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: #7b6cf5;
+  mix-blend-mode: hue;
+  opacity: 0.42;
 }
 
 /* "Интегральная оценка" page: cap + books illustration. The blocks that carry
@@ -180,7 +209,26 @@ html:has(style.darkreader) :is(
   z-index: -1;
   pointer-events: none;
   border-radius: inherit;
-  background: rgba(36, 37, 37, 0.38);
+  background: rgba(36, 37, 37, 0.3);
+}
+
+/* The hue layer for the illustration sits on the blocks' common parent
+   (found structurally with :has, the hashed class name is not stable). It must
+   not live inside the blocks: they are isolated groups, and a blend inside an
+   isolated group would see a transparent backdrop and paint a violet box. */
+html:has(style.darkreader) :has(> [class*="_diagnosticWorksResult_"]) {
+  position: relative;
+}
+
+html:has(style.darkreader) :has(> [class*="_diagnosticWorksResult_"])::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background: #7b6cf5;
+  mix-blend-mode: hue;
+  opacity: 0.5;
 }
 
 /* Labels printed on the book illustration ("ИО 40%", "40%", "пока
