@@ -40,6 +40,16 @@ html:has(style.darkreader) [data-testid="studentDisciplineLink"] [class*="_name_
 }
 
 /* ---------------------------------------------------------------------------
+   Equations: the platform renders formulas as black SVG images
+   (/api/equations/svg.image?<latex>) with a transparent background, which
+   Dark Reader does not touch, so they vanish on the dark page. Invert them.
+   ------------------------------------------------------------------------- */
+html:has(style.darkreader) img[src*="/api/equations/"],
+html:has(style.darkreader) img[data-formula-latex] {
+  filter: invert(0.9);
+}
+
+/* ---------------------------------------------------------------------------
    3. Task status icons on the main page ("На доработке", "Пора начать",
    "На проверке"). They are PNGs with a light pastel circle baked in, which
    glows on a dark card. Invert + rotate the hue back: the pastel circle
