@@ -43,8 +43,6 @@
     }
 
     function main(link) {
-        // sacrificeCards();
-        document.documentElement.classList.toggle("hide-targets", true);
         // document.documentElement.style.setProperty("overflow", "hidden", "important");   // breaks everything don't use
         // hideElement(() => document.getElementsByClassName("_fullRow_1542x_46")[0]);
         document.addEventListener("keydown", (event) => {
@@ -53,9 +51,6 @@
               if (home_btn && home_btn.textContent != "Расписание") {
                 home_btn.click();
               } 
-            }
-            else if (event.key == "=") {
-              document.documentElement.classList.toggle("hide-targets");
             }
         });
         // fixDarkMode();

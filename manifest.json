@@ -14,7 +14,7 @@
       {
         "matches": ["*://horodigital.ru/*"],
         "js": ["content.js"],
-        "css": ["style.css"],
+        "css": ["style.css", "dark.css"],
         "run_at": "document_idle",
         "world": "MAIN",
         "all_frames": false

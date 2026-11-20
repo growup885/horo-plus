@@ -1,0 +1,50 @@
+/*
+ * Horo+ dark theme fixes.
+ *
+ * The platform's built-in "Тёмная тема" is Dark Reader auto-inversion, which
+ * gets some places wrong. Every rule here is gated by
+ * html:has(style.darkreader) so nothing changes in the light theme.
+ *
+ * Selectors use data-testid or partial class names ([class*="_name_"]) because
+ * the platform's CSS-module hashes (_name_142iu_72) change on every rebuild.
+ */
+
+/* ---------------------------------------------------------------------------
+   1. Text colours.
+   Dark Reader maps the platform palette (--darkBlue, --darkGrey, --red, ...)
+   to its own --darkreader-text--<name> variables. The defaults are dim
+   (e.g. --darkBlue -> #b9b9b9), so headings and secondary text look grey.
+   Overriding the variables fixes every place that uses them at once.
+   ------------------------------------------------------------------------- */
+html:has(style.darkreader) {
+  --darkreader-text--darkBlue: #f0eef8 !important;      /* headings, titles    */
+  --darkreader-text--darkGrey: #c9c6da !important;      /* secondary text      */
+  --darkreader-text--digitalViolet: #b9b5f2 !important; /* accent links/labels */
+  --darkreader-text--red: #ff8a80 !important;           /* overdue warning     */
+  --darkreader-text--error: #ff8a80 !important;
+}
+
+/* Outline buttons ("Перейти", "Создать", ...) use a blue-grey that is too dim. */
+html:has(style.darkreader) [class*="_outline_"] {
+  color: #c4c8f5 !important;
+  border-color: #6f6bbd !important;
+}
+
+/* ---------------------------------------------------------------------------
+   2. Subject cards: the title sits on a light illustrated background, but Dark
+   Reader turns the text light grey -> unreadable. Restore the dark text.
+   ------------------------------------------------------------------------- */
+html:has(style.darkreader) [data-testid="studentDisciplineLink"] [class*="_name_"] {
+  color: #27205d !important;
+  text-shadow: none !important;
+}
+
+/* ---------------------------------------------------------------------------
+   3. Task status icons on the main page ("На доработке", "Пора начать",
+   "На проверке"). They are PNGs with a light pastel circle baked in, which
+   glows on a dark card. Invert + rotate the hue back: the pastel circle
+   becomes a dark tinted one, the glyph becomes light, hues stay the same.
+   ------------------------------------------------------------------------- */
+html:has(style.darkreader) [class*="_tasks_"] [class*="_status_"] > img[class*="_icon_"] {
+  filter: invert(0.88) hue-rotate(180deg) saturate(1.1) brightness(1.35);
+}

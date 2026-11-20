@@ -8,6 +8,7 @@ Features:
 - Expand input box (Ctrl+.)
 - Go to top in topic (g)
 - Open chat (c), notifications (n), subjects (s), schedule (t)
+- Dark theme fixes (dark.css): brighter headings and secondary text, readable subject titles, restyled task status icons
 
 Planned for future updates:
 - Better navigation in tests (jump to question, finish test, etc.)
