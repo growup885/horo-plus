@@ -34,7 +34,7 @@ html:has(style.darkreader) [class*="_outline_"] {
    2. Subject cards: the title sits on a light illustrated background, but Dark
    Reader turns the text light grey -> unreadable. Restore the dark text.
    ------------------------------------------------------------------------- */
-html:has(style.darkreader) [data-testid="studentDisciplineLink"] [class*="_name_"] {
+html:not([data-hp-style="cookie-plus"]):has(style.darkreader) [data-testid="studentDisciplineLink"] [class*="_name_"] {
   color: #27205d !important;
   text-shadow: none !important;
 }

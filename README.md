@@ -8,6 +8,7 @@ Features:
 - Expand input box (Ctrl+.)
 - Go to top in topic (g)
 - Open chat (c), notifications (n), subjects (s), schedule (t)
+- "Печенька+" style (Achievements → Styles): the Печенька characters on flat backgrounds, with a dark and a light version that follows the theme automatically. Only visible to you (client-side).
 - Dark theme fixes (dark.css): brighter headings and secondary text, readable subject titles, restyled task status icons
 
 Planned for future updates:

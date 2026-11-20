@@ -13,11 +13,24 @@
     "content_scripts": [
       {
         "matches": ["*://horodigital.ru/*"],
+        "js": ["content_early.js"],
+        "run_at": "document_start",
+        "world": "MAIN",
+        "all_frames": false
+      },
+      {
+        "matches": ["*://horodigital.ru/*"],
         "js": ["content.js"],
-        "css": ["style.css", "dark.css"],
+        "css": ["style.css", "dark.css", "cookie-plus.css"],
         "run_at": "document_idle",
         "world": "MAIN",
         "all_frames": false
+      }
+    ],
+    "web_accessible_resources": [
+      {
+        "resources": ["assets/cookie-plus/*"],
+        "matches": ["*://horodigital.ru/*"]
       }
     ],
     "permissions": ["webNavigation"],
